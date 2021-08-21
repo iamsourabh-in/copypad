@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <title>Hello, world!</title>
+</head>
+
+<body>
+    <div id="sidenavbar" class="sidenav"></div>
+    <div class="main">
+        <div class="pad p-5">
+            <div id="copypad" class="row"></div>
+        </div>
+        <footer class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <input id="textpad" class="form-control" type="text" />
+                    </div>
+                    <div class="col-lg-2">
+                        <button id="btnsave" class="form-control btn btn-primary">
+                Save
+              </button>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+<script defer scr="scripts\app.js"></script>
+<link href="css\style.css" rel="stylesheet" />
+<script>
+    $(document).ready(function() {
+        var showData = JSON.parse(localStorage.getItem("padData"));
+
+        var selectedKey = "";
+        $("#btnsave").click(function() {
+            console.log(selectedKey);
+            if (selectedKey == null || selectedKey == "")
+                alert("Please select a category, And then Add the Command");
+            else {
+                showData = JSON.parse(localStorage.getItem("padData"));
+                showData[selectedKey].push($("#textpad").val());
+                localStorage.setItem("padData", JSON.stringify(showData));
+                $("#textpad").val("");
+                ListData(selectedKey);
+            }
+        });
+
+        window.copyme = function() {
+            document.execCommand("Copy");
+        };
+
+        let check = JSON.parse(localStorage.getItem("padData"));
+        if (check == null || check == undefined || check == "") {
+            var data = {
+                Kube: ["k get pods", "k get services"],
+                Goolge: ["www.google.com", "test"],
+                Common: ["ssh srustag@trans.com", "copy this by click"],
+            };
+            localStorage.setItem("padData", JSON.stringify(data));
+        }
+
+
+        for (let key in showData) {
+            console.log(key, showData[key]);
+            $("#sidenavbar").append(
+                "<a  onclick=" + "ListData('" + key + "')>" + key + "</a>"
+            );
+        }
+
+        window.ListData = function(key) {
+            let padData = JSON.parse(localStorage.getItem("padData"));
+            selectedKey = key;
+            console.log(selectedKey);
+            $("#copypad").html("");
+            var arrayLength = padData[selectedKey].length;
+            var commandList = padData[selectedKey];
+
+            for (var i = 0; i < arrayLength; i++) {
+                $("#copypad").append(
+                    "<div class='col-lg-3 btn btn-primary btn-lg m-1' style='user-select:all' onclick='copyme()'>" +
+                    commandList[i] +
+                    "</div>"
+                );
+            }
+        };
+    });
+</script>
+
+</html>
