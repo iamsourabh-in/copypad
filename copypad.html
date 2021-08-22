@@ -24,9 +24,7 @@
                     <input type="text" class="form-control" with="80%" id="categoryinput" />
                 </div>
                 <div class="col-sm-2">
-                    <button class="btn-sm btn-primary" id="SaveCategory">
-              Save
-            </button>
+                    <button class="btn-sm btn-primary" id="SaveCategory">Save</button>
                 </div>
             </div>
         </div>
@@ -77,7 +75,7 @@
 
         var showData = JSON.parse(localStorage.getItem("padData"));
 
-        var selectedKey = "";
+        var selectedKey = "Dashboard";
         $("#btnsave").click(function() {
             console.log(selectedKey);
             if (selectedKey == null || selectedKey == "")
@@ -98,9 +96,7 @@
         let check = JSON.parse(localStorage.getItem("padData"));
         if (check == null || check == undefined || check == "") {
             var data = {
-                Kube: ["k get pods", "k get services"],
-                Goolge: ["www.google.com", "test"],
-                Common: ["ssh srustag@trans.com", "copy this by click"],
+                Dashboard: [],
             };
             localStorage.setItem("padData", JSON.stringify(data));
         }
@@ -115,19 +111,35 @@
         window.ListData = function(key) {
             let padData = JSON.parse(localStorage.getItem("padData"));
             selectedKey = key;
-            console.log(selectedKey);
             $("#copypad").html("");
-            var arrayLength = padData[selectedKey].length;
-            var commandList = padData[selectedKey];
+            if (selectedKey == "Dashboard") {
+                var arrayLength = padData[selectedKey].length;
+                var commandList = padData[selectedKey];
+                for (const [key, value] of Object.entries(padData)) {
+                    if (key == "Dashboard") continue;
+                    $("#copypad").append(
+                        "<div class='card m-5' style='width: 18rem;'><div class='card-body'><h5 class='card-title'>" +
+                        key +
+                        "</h5><h6 class='card-subtitle mb-2 text-muted'>" +
+                        value.length +
+                        "</h6></div></div>"
+                    );
+                    console.log(`${key}: ${value}`);
+                }
+            } else {
+                var arrayLength = padData[selectedKey].length;
+                var commandList = padData[selectedKey];
 
-            for (var i = 0; i < arrayLength; i++) {
-                $("#copypad").append(
-                    "<div class='col-lg-3 col-sm-12 col-md-6 btn btn-primary btn-lg m-1' style='user-select:all' onclick='copyme()'>" +
-                    commandList[i] +
-                    "</div>"
-                );
+                for (var i = 0; i < arrayLength; i++) {
+                    $("#copypad").append(
+                        "<div class='col-lg-3 col-sm-12 col-md-6 btn btn-primary btn-lg m-1' style='user-select:all' onclick='copyme()'>" +
+                        commandList[i] +
+                        "</div>"
+                    );
+                }
             }
         };
+
         // Get the <span> element that closes the modal
         var span = document.getElementsByClassName("close")[0];
         // When the user clicks on <span> (x), close the modal
@@ -148,6 +160,7 @@
                 openModal.style.display = "none";
             }
         };
+        ListData;
     });
 </script>
 
