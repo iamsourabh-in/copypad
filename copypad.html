@@ -13,7 +13,30 @@
 </head>
 
 <body>
-    <div id="sidenavbar" class="sidenav"></div>
+    <!-- The Modal -->
+    <div id="myModal" class="openmodal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="row">
+                <label>Add Category</label>
+                <div class="col-sm-10 col-lg-10">
+                    <input type="text" class="form-control" with="80%" id="categoryinput" />
+                </div>
+                <div class="col-sm-2">
+                    <button class="btn-sm btn-primary" id="SaveCategory">
+              Save
+            </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="sidenavbar" class="sidenav" style="padding-top: 80px">
+        <button class="logo btn-lg btn-primary">CopyPad</button>
+        <button class="btn-lg btn-danger btnAddCategory" id="btnCategory">
+        Add Category
+      </button>
+    </div>
     <div class="main">
         <div class="pad p-5">
             <div id="copypad" class="row"></div>
@@ -21,11 +44,11 @@
         <footer class="footer">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-8">
+                    <div class="col-lg-9">
                         <input id="textpad" class="form-control" type="text" />
                     </div>
                     <div class="col-lg-2">
-                        <button id="btnsave" class="form-control btn btn-primary">
+                        <button id="btnsave" class="form-control btn btn-primary btnsave">
                 Save
               </button>
                     </div>
@@ -38,6 +61,20 @@
 <link href="css\style.css" rel="stylesheet" />
 <script>
     $(document).ready(function() {
+        $("#SaveCategory").click(function() {
+            var cat = $("#categoryinput").val();
+            if (cat == null || cat == "") alert("Input is not valid");
+            else {
+                showData = JSON.parse(localStorage.getItem("padData"));
+                showData[cat] = [];
+                localStorage.setItem("padData", JSON.stringify(showData));
+                $("#categoryinput").val("");
+                var modal = document.getElementById("myModal");
+                modal.style.display = "none";
+                location.reload();
+            }
+        });
+
         var showData = JSON.parse(localStorage.getItem("padData"));
 
         var selectedKey = "";
@@ -68,7 +105,6 @@
             localStorage.setItem("padData", JSON.stringify(data));
         }
 
-
         for (let key in showData) {
             console.log(key, showData[key]);
             $("#sidenavbar").append(
@@ -86,10 +122,30 @@
 
             for (var i = 0; i < arrayLength; i++) {
                 $("#copypad").append(
-                    "<div class='col-lg-3 btn btn-primary btn-lg m-1' style='user-select:all' onclick='copyme()'>" +
+                    "<div class='col-lg-3 col-sm-12 col-md-6 btn btn-primary btn-lg m-1' style='user-select:all' onclick='copyme()'>" +
                     commandList[i] +
                     "</div>"
                 );
+            }
+        };
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            var modal = document.getElementById("myModal");
+            modal.style.display = "none";
+        };
+
+        // Get the button that opens the modal
+        $("#btnCategory").click(function() {
+            var modal = document.getElementById("myModal");
+            modal.style.display = "block";
+        });
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            var modal = document.getElementById("myModal");
+            if (event.target == modal) {
+                openModal.style.display = "none";
             }
         };
     });
