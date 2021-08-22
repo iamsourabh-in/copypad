@@ -78,8 +78,12 @@
         var selectedKey = "Dashboard";
         $("#btnsave").click(function() {
             console.log(selectedKey);
-            if (selectedKey == null || selectedKey == "")
-                alert("Please select a category, And then Add the Command");
+            if (
+                selectedKey == null ||
+                selectedKey == "" ||
+                selectedKey == "Dashboard"
+            )
+                alert("Please select a Valid category, And then Add the Command");
             else {
                 showData = JSON.parse(localStorage.getItem("padData"));
                 showData[selectedKey].push($("#textpad").val());
@@ -118,7 +122,9 @@
                 for (const [key, value] of Object.entries(padData)) {
                     if (key == "Dashboard") continue;
                     $("#copypad").append(
-                        "<div class='card m-5' style='width: 18rem;'><div class='card-body'><h5 class='card-title'>" +
+                        "<div  onclick='ListData('" +
+                        key +
+                        "')' class='card m-5' style='width: 18rem;'><div class='card-body'><h5 class='card-title'>" +
                         key +
                         "</h5><h6 class='card-subtitle mb-2 text-muted'>" +
                         value.length +
