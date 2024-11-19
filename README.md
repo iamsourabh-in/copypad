@@ -1,6 +1,9 @@
 # copypad
 Instantly copy any text you saved directly , rather than manually selection  using cursor
 
+Create your own categories to work with 
+and under that keep you copy pad organized.
+
 DEMO
 
 https://iamsourabh-in.github.io/copypad/
