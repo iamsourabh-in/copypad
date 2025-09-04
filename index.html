@@ -2,172 +2,95 @@
 <html lang="en">
 
 <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous" />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <title>CopyPad</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="css/style.css" rel="stylesheet" />
 </head>
 
 <body>
     <!-- The Modal -->
-    <div id="myModal" class="openmodal">
-        <!-- Modal content -->
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <div class="row">
-                <label>Add Category</label>
-                <div class="col-sm-10 col-lg-10">
-                    <input type="text" class="form-control" with="80%" id="categoryinput" />
+    <div id="myModal" class="modal fade" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Category</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="col-sm-2">
-                    <button class="btn-sm btn-primary" id="SaveCategory">Save</button>
+                <div class="modal-body">
+                    <input type="text" class="form-control" id="categoryinput" placeholder="Category Name">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="SaveCategory">Save</button>
                 </div>
             </div>
         </div>
     </div>
-    <div id="sidenavbar" class="sidenav" style="padding-top: 80px">
-        <button class="logo btn-lg btn-primary">CopyPad</button>
-        <button class="btn-lg btn-danger btnAddCategory" id="btnCategory">
-        Add Category
-      </button>
+
+    <div class="sidebar collapsed">
+        <a href="#" class="logo">
+            <span class="material-icons">content_paste</span>
+            <span class="logo-text">CopyPad</span>
+        </a>
+        <div id="sidenavbar">
+        </div>
+        <a href="#" class="add-category-btn" data-bs-toggle="modal" data-bs-target="#myModal">
+            <span class="material-icons">add</span>
+            <span class="add-category-text">Add Category</span>
+        </a>
     </div>
-    <div class="main">
-        <div class="pad p-5">
+
+    <div class="main-content collapsed">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <button class="btn btn-primary" id="sidebarToggle">
+                    <span class="material-icons">menu</span>
+                </button>
+                <a class="navbar-brand" href="about.html">About</a>
+            </div>
+        </nav>
+        <div class="pad p-4">
             <div id="copypad" class="row"></div>
         </div>
-        <footer class="footer">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-9">
-                        <input id="textpad" class="form-control" type="text" />
-                    </div>
-                    <div class="col-lg-2">
-                        <button id="btnsave" class="form-control btn btn-primary btnsave">
-                Save
-              </button>
-                    </div>
+    </div>
+
+    <footer class="footer collapsed">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-8 col-md-9 order-1 order-md-1">
+                    <input id="textpad" class="form-control p-2" type="text" placeholder="Enter text to save...">
+                </div>
+                <div class="col-4 col-md-3 order-2 order-md-2 text-md-end mt-2 mt-md-0">
+                    <button id="btnsave" class="btn btn-primary w-100">
+                        <span class="material-icons">save</span>
+                        Save
+                    </button>
                 </div>
             </div>
-        </footer>
-    </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Custom JS -->
+    <script src="scripts/app.js"></script>
+    <script>
+        document.querySelector('a[href="about.html"]').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelector('.sidebar').classList.add('collapsed');
+            document.querySelector('.main-content').classList.add('collapsed');
+            document.querySelector('.footer').classList.add('collapsed');
+            window.location.href = this.href;
+        });
+    </script>
 </body>
-<script defer scr="scripts\app.js"></script>
-<link href="css\style.css" rel="stylesheet" />
-<script>
-    $(document).ready(function() {
-        $("#SaveCategory").click(function() {
-            var cat = $("#categoryinput").val();
-            if (cat == null || cat == "") alert("Input is not valid");
-            else {
-                showData = JSON.parse(localStorage.getItem("padData"));
-                showData[cat] = [];
-                localStorage.setItem("padData", JSON.stringify(showData));
-                $("#categoryinput").val("");
-                var modal = document.getElementById("myModal");
-                modal.style.display = "none";
-                location.reload();
-            }
-        });
-
-        var showData = JSON.parse(localStorage.getItem("padData"));
-
-        var selectedKey = "Dashboard";
-        $("#btnsave").click(function() {
-            console.log(selectedKey);
-            if (
-                selectedKey == null ||
-                selectedKey == "" ||
-                selectedKey == "Dashboard"
-            )
-                alert("Please select a Valid category, And then Add the Command");
-            else {
-                showData = JSON.parse(localStorage.getItem("padData"));
-                showData[selectedKey].push($("#textpad").val());
-                localStorage.setItem("padData", JSON.stringify(showData));
-                $("#textpad").val("");
-                ListData(selectedKey);
-            }
-        });
-
-        window.copyme = function() {
-            document.execCommand("Copy");
-        };
-
-        let check = JSON.parse(localStorage.getItem("padData"));
-        if (check == null || check == undefined || check == "") {
-            var data = {
-                Dashboard: [],
-            };
-            localStorage.setItem("padData", JSON.stringify(data));
-        }
-
-        for (let key in showData) {
-            console.log(key, showData[key]);
-            $("#sidenavbar").append(
-                "<a  onclick=" + "ListData('" + key + "')>" + key + "</a>"
-            );
-        }
-
-        window.ListData = function(key) {
-            let padData = JSON.parse(localStorage.getItem("padData"));
-            selectedKey = key;
-            $("#copypad").html("");
-            if (selectedKey == "Dashboard") {
-                var arrayLength = padData[selectedKey].length;
-                var commandList = padData[selectedKey];
-                for (const [key, value] of Object.entries(padData)) {
-                    if (key == "Dashboard") continue;
-                    $("#copypad").append(
-                        "<div  onclick='ListData('" +
-                        key +
-                        "')' class='card m-5' style='width: 18rem;'><div class='card-body'><h5 class='card-title'>" +
-                        key +
-                        "</h5><h6 class='card-subtitle mb-2 text-muted'>" +
-                        value.length +
-                        "</h6></div></div>"
-                    );
-                    console.log(`${key}: ${value}`);
-                }
-            } else {
-                var arrayLength = padData[selectedKey].length;
-                var commandList = padData[selectedKey];
-
-                for (var i = 0; i < arrayLength; i++) {
-                    $("#copypad").append(
-                        "<div class='col-lg-3 col-sm-12 col-md-6 btn btn-primary btn-lg m-1' style='user-select:all' onclick='copyme()'>" +
-                        commandList[i] +
-                        "</div>"
-                    );
-                }
-            }
-        };
-
-        // Get the <span> element that closes the modal
-        var span = document.getElementsByClassName("close")[0];
-        // When the user clicks on <span> (x), close the modal
-        span.onclick = function() {
-            var modal = document.getElementById("myModal");
-            modal.style.display = "none";
-        };
-
-        // Get the button that opens the modal
-        $("#btnCategory").click(function() {
-            var modal = document.getElementById("myModal");
-            modal.style.display = "block";
-        });
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function(event) {
-            var modal = document.getElementById("myModal");
-            if (event.target == modal) {
-                openModal.style.display = "none";
-            }
-        };
-        ListData;
-    });
-</script>
 
 </html>
